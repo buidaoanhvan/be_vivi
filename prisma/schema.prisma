@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model bai_dang {
+  id            Int         @id @default(autoincrement())
+  id_nguoi_dung Int
+  noi_dung      String      @db.Text
+  ngay_dang     DateTime    @db.DateTime(0)
+  nguoi_dung    nguoi_dung  @relation(fields: [id_nguoi_dung], references: [id], onUpdate: Restrict, map: "bai_dang_ibfk_1")
+  binh_luan     binh_luan[]
+  hinh_anh      hinh_anh[]
+  thich         thich[]
+
+  @@index([id_nguoi_dung], map: "id_nguoi_dung")
+}
+
+model binh_luan {
+  id             Int        @id @default(autoincrement())
+  id_nguoi_dung  Int
+  id_bai_dang    Int
+  noi_dung       String     @db.Text
+  ngay_binh_luan DateTime   @db.DateTime(0)
+  nguoi_dung     nguoi_dung @relation(fields: [id_nguoi_dung], references: [id], onUpdate: Restrict, map: "binh_luan_ibfk_1")
+  bai_dang       bai_dang   @relation(fields: [id_bai_dang], references: [id], onUpdate: Restrict, map: "binh_luan_ibfk_2")
+
+  @@index([id_bai_dang], map: "id_bai_dang")
+  @@index([id_nguoi_dung], map: "id_nguoi_dung")
+}
+
+model hinh_anh {
+  id          Int      @id @default(autoincrement())
+  id_bai_dang Int
+  duong_dan   String   @db.VarChar(255)
+  bai_dang    bai_dang @relation(fields: [id_bai_dang], references: [id], onUpdate: Restrict, map: "hinh_anh_ibfk_1")
+
+  @@index([id_bai_dang], map: "id_bai_dang")
+}
+
+model ket_ban {
+  id                                             Int        @id @default(autoincrement())
+  id_nguoi_dung_1                                Int
+  id_nguoi_dung_2                                Int
+  trang_thai                                     Boolean
+  ngay_tao                                       DateTime   @db.DateTime(0)
+  nguoi_dung_ket_ban_id_nguoi_dung_1Tonguoi_dung nguoi_dung @relation("ket_ban_id_nguoi_dung_1Tonguoi_dung", fields: [id_nguoi_dung_1], references: [id], onUpdate: Restrict, map: "ket_ban_ibfk_1")
+  nguoi_dung_ket_ban_id_nguoi_dung_2Tonguoi_dung nguoi_dung @relation("ket_ban_id_nguoi_dung_2Tonguoi_dung", fields: [id_nguoi_dung_2], references: [id], onUpdate: Restrict, map: "ket_ban_ibfk_2")
+
+  @@unique([id_nguoi_dung_1, id_nguoi_dung_2], map: "ket_ban_index_1")
+  @@index([id_nguoi_dung_2], map: "id_nguoi_dung_2")
+}
+
+model nguoi_dung {
+  id                                          Int         @id @default(autoincrement())
+  ten_nguoi_dung                              String      @db.VarChar(255)
+  email                                       String      @unique(map: "nguoi_dung_index_0") @db.VarChar(255)
+  mat_khau                                    String      @db.VarChar(255)
+  hinh_anh                                    String?     @db.VarChar(255)
+  anh_bia                                     String?     @db.VarChar(255)
+  ngay_tao                                    DateTime    @db.DateTime(0)
+  ngay_cap_nhat                               DateTime?   @db.DateTime(0)
+  bai_dang                                    bai_dang[]
+  binh_luan                                   binh_luan[]
+  ket_ban_ket_ban_id_nguoi_dung_1Tonguoi_dung ket_ban[]   @relation("ket_ban_id_nguoi_dung_1Tonguoi_dung")
+  ket_ban_ket_ban_id_nguoi_dung_2Tonguoi_dung ket_ban[]   @relation("ket_ban_id_nguoi_dung_2Tonguoi_dung")
+  thich                                       thich[]
+  tin_nhan_tin_nhan_id_nguoi_guiTonguoi_dung  tin_nhan[]  @relation("tin_nhan_id_nguoi_guiTonguoi_dung")
+  tin_nhan_tin_nhan_id_nguoi_nhanTonguoi_dung tin_nhan[]  @relation("tin_nhan_id_nguoi_nhanTonguoi_dung")
+}
+
+model thich {
+  id            Int        @id @default(autoincrement())
+  id_nguoi_dung Int
+  id_bai_dang   Int
+  ngay_thich    DateTime   @db.DateTime(0)
+  nguoi_dung    nguoi_dung @relation(fields: [id_nguoi_dung], references: [id], onUpdate: Restrict, map: "thich_ibfk_1")
+  bai_dang      bai_dang   @relation(fields: [id_bai_dang], references: [id], onUpdate: Restrict, map: "thich_ibfk_2")
+
+  @@index([id_bai_dang], map: "id_bai_dang")
+  @@index([id_nguoi_dung], map: "id_nguoi_dung")
+}
+
+model tin_nhan {
+  id                                            Int        @id @default(autoincrement())
+  id_nguoi_gui                                  Int
+  id_nguoi_nhan                                 Int
+  noi_dung                                      String     @db.Text
+  ngay_gui                                      DateTime   @db.DateTime(0)
+  nguoi_dung_tin_nhan_id_nguoi_guiTonguoi_dung  nguoi_dung @relation("tin_nhan_id_nguoi_guiTonguoi_dung", fields: [id_nguoi_gui], references: [id], onUpdate: Restrict, map: "tin_nhan_ibfk_1")
+  nguoi_dung_tin_nhan_id_nguoi_nhanTonguoi_dung nguoi_dung @relation("tin_nhan_id_nguoi_nhanTonguoi_dung", fields: [id_nguoi_nhan], references: [id], onUpdate: Restrict, map: "tin_nhan_ibfk_2")
+
+  @@index([id_nguoi_gui], map: "id_nguoi_gui")
+  @@index([id_nguoi_nhan], map: "id_nguoi_nhan")
+}
