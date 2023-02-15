@@ -60,10 +60,15 @@ model nguoi_dung {
   ten_nguoi_dung                              String      @db.VarChar(255)
   email                                       String      @unique(map: "nguoi_dung_index_0") @db.VarChar(255)
   mat_khau                                    String      @db.VarChar(255)
+  ngay_sinh                                   DateTime    @db.Date
+  gioi_tinh                                   Int?
   hinh_anh                                    String?     @db.VarChar(255)
   anh_bia                                     String?     @db.VarChar(255)
+  trang_thai                                  Int?
   ngay_tao                                    DateTime    @db.DateTime(0)
   ngay_cap_nhat                               DateTime?   @db.DateTime(0)
+  token                                       String?     @db.VarChar(255)
+  token_iat                                   DateTime?   @db.Timestamp(0)
   bai_dang                                    bai_dang[]
   binh_luan                                   binh_luan[]
   ket_ban_ket_ban_id_nguoi_dung_1Tonguoi_dung ket_ban[]   @relation("ket_ban_id_nguoi_dung_1Tonguoi_dung")
