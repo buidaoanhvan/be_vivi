@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, skipMissingProperties: true }));
   const config = new DocumentBuilder()
     .setTitle('API Vivi')
     .setDescription('Mạng xã hội Việt Nam')

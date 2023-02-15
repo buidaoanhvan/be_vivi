@@ -4,14 +4,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginAuthDto } from '../auth/dto/login-auth.dto';
 import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
+import { UpdateNguoiDungDto } from './dto/update-nguoidung.dto';
 
 @Injectable()
 export class NguoiDungService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async create(RegisterAuthDto: RegisterAuthDto) {
+  async create(registerAuthDto: RegisterAuthDto) {
     const { ten_nguoi_dung, email, mat_khau, ngay_sinh, gioi_tinh } =
-      RegisterAuthDto;
+      registerAuthDto;
     const existingUser = await this.prisma.nguoi_dung.findUnique({
       where: { email },
     });
@@ -56,5 +57,18 @@ export class NguoiDungService {
       where: { email },
     });
     return nguoi_dung;
+  }
+
+  async updateInfoById(id: number, updateNguoiDungDto: UpdateNguoiDungDto) {
+
+    if (updateNguoiDungDto.ngay_sinh) {
+      updateNguoiDungDto.ngay_sinh = moment.utc(updateNguoiDungDto.ngay_sinh, 'YYYY-MM-DD').toDate()
+    }
+
+    const nguoi_dung = await this.prisma.nguoi_dung.update({
+      where: { id },
+      data: updateNguoiDungDto
+    })
+    return nguoi_dung
   }
 }

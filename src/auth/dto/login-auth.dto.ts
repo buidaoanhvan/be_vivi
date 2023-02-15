@@ -1,19 +1,17 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsDefined, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginAuthDto {
-  @ApiProperty({
-    type: String,
-    example: '',
+  @ApiProperty({ type: String, example: '', })
+  @IsEmail({ allow_display_name: false }, { message: "Địa chỉ email không hợp lệ." })
+  @IsDefined({
+    message: "Vui lòng nhập địa chỉ email."
   })
-  @IsEmail()
-  @IsNotEmpty()
   email: string;
 
-  @ApiProperty({
-    type: String,
-    example: '',
+  @ApiProperty({ type: String, example: '', })
+  @IsDefined({
+    message: "Vui lòng nhập mật khẩu."
   })
-  @IsNotEmpty()
   mat_khau: string;
 }
