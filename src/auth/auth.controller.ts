@@ -4,6 +4,9 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { NguoiDungService } from 'src/nguoi-dung/nguoi-dung.service';
+import { plainToClass } from 'class-transformer';
+import { NguoiDungDTO } from 'src/nguoi-dung/dto/nguoidung.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -20,9 +23,9 @@ export class AuthController {
       email: nguoi_dung.email,
     };
     const token = await this.authService.signPayload(payload);
-    delete nguoi_dung.mat_khau;
+    const nguoi_dung_return = plainToClass(NguoiDungDTO, nguoi_dung);
     return {
-      nguoi_dung,
+      nguoi_dung: nguoi_dung_return,
       token,
     };
   }
@@ -36,9 +39,9 @@ export class AuthController {
       email: nguoi_dung.email,
     };
     const token = await this.authService.signPayload(payload);
-    delete nguoi_dung.mat_khau;
+    const nguoi_dung_return = plainToClass(NguoiDungDTO, nguoi_dung);
     return {
-      nguoi_dung,
+      nguoi_dung: nguoi_dung_return,
       token,
     };
   }

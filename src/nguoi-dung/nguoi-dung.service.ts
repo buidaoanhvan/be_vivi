@@ -8,7 +8,7 @@ import { UpdateNguoiDungDto } from './dto/update-nguoidung.dto';
 
 @Injectable()
 export class NguoiDungService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(registerAuthDto: RegisterAuthDto) {
     const { ten_nguoi_dung, email, mat_khau, ngay_sinh, gioi_tinh } =
@@ -60,15 +60,16 @@ export class NguoiDungService {
   }
 
   async updateInfoById(id: number, updateNguoiDungDto: UpdateNguoiDungDto) {
-
     if (updateNguoiDungDto.ngay_sinh) {
-      updateNguoiDungDto.ngay_sinh = moment.utc(updateNguoiDungDto.ngay_sinh, 'YYYY-MM-DD').toDate()
+      updateNguoiDungDto.ngay_sinh = moment
+        .utc(updateNguoiDungDto.ngay_sinh, 'YYYY-MM-DD')
+        .toDate();
     }
 
     const nguoi_dung = await this.prisma.nguoi_dung.update({
       where: { id },
-      data: updateNguoiDungDto
-    })
-    return nguoi_dung
+      data: updateNguoiDungDto,
+    });
+    return nguoi_dung;
   }
 }
