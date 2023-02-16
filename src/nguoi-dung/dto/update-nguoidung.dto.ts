@@ -14,4 +14,12 @@ export class UpdateNguoiDungDto {
   @ApiProperty({ type: Date, example: '' })
   @IsDateString()
   ngay_sinh: Date;
+
+  @ApiProperty({ type: String, example: '' })
+  @IsString()
+  hinh_anh: string;
+
+  @ApiProperty({ type: String, example: '' })
+  @IsString()
+  anh_bia: string;
 }
